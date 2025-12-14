@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Student Form</title>
+</head>
+<body>
+
+<h2>Student Form</h2>
+
+<input id="name" placeholder="Name"><br><br>
+<input id="age" placeholder="Age"><br><br>
+
+<button onclick="send()">Submit</button>
+<p id="msg"></p>
+
+<hr>
+
+<button onclick="load()">Show Students</button>
+<pre id="list"></pre>
+
+<script>
+function send() {
+  fetch("http://127.0.0.1:3000/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      age: document.getElementById("age").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("msg").innerText = data.message;
+  })
+  .catch(() => {
+    document.getElementById("msg").innerText = "Server not reachable";
+  });
+}
+
+function load() {
+  fetch("http://127.0.0.1:3000/students")
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("list").innerText =
+        JSON.stringify(data, null, 2);
+    });
+}
+</script>
+
+</body>
+</html>
